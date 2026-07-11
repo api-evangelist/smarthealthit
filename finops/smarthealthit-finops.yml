@@ -1,0 +1,91 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: SMART Health IT
+providerId: smarthealthit
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: true
+tags:
+- SMART on FHIR
+- FHIR
+- Health IT
+- Open Standards
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of SMART Health IT usage. There is no vendor invoice anywhere in
+  the picture - the specifications are open standards, the sandboxes
+  (r4.smarthealthit.org, launch.smarthealthit.org,
+  bulk-data.smarthealthit.org) are free public test services, and the client
+  libraries and reference servers are open source. The costs that do exist for
+  an adopting team are indirect: engineering time to build against SMART App
+  Launch and FHIR, your own infrastructure if you self-host the open source
+  launcher or bulk data server for private testing, and - once you move to
+  production - whatever terms apply in each EHR vendor's developer program,
+  which is a separate provider relationship.
+notes: >-
+  Because there is no billing relationship with SMART Health IT, FOCUS
+  columns below describe a zero-cost service entry. Track downstream EHR
+  vendor API costs (if any) under those vendors, not here.
+sources:
+- https://smarthealthit.org/
+- https://docs.smarthealthit.org/
+- https://github.com/smart-on-fhir
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: SMART Health IT
+serviceCategory: Healthcare Interoperability
+billingModel:
+  pricingCategory: Free
+  billingFrequency: None
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+focusColumns:
+  ServiceName: SMART Health IT Sandboxes
+  ServiceCategory: Healthcare Interoperability
+  ProviderName: SMART Health IT
+  PublisherName: SMART Health IT
+  InvoiceIssuerName: None (no billing relationship)
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Free
+meters:
+- name: sandbox_requests
+  description: FHIR REST requests against the open sandboxes; free, tracked only for your own usage awareness.
+  unit: requests
+  aggregation: sum
+  dimensions:
+  - endpoint
+  - resource_type
+- name: bulk_exports
+  description: Bulk Data $export jobs run against the reference server; free, sized by simulated patient count.
+  unit: jobs
+  aggregation: sum
+  dimensions:
+  - export_level
+- name: self_hosted_compute
+  description: Infrastructure cost of self-hosting the open source launcher or bulk data server for private testing (no SMART Health IT invoice).
+  unit: hours
+  aggregation: sum
+  dimensions:
+  - deployment
+principles:
+- name: Visibility
+  description: SMART Health IT itself never invoices; the visible costs are engineering time and any self-hosted test infrastructure.
+- name: Allocation
+  description: Attribute self-hosted sandbox infrastructure and integration engineering to the product teams building SMART on FHIR apps.
+- name: Optimization
+  description: Use the free hosted sandboxes for development instead of standing up private test EHR environments; reserve vendor sandbox programs for conformance testing.
+- name: Accountability
+  description: When apps go to production, move cost tracking to each EHR vendor's developer program terms - that is where real charges, if any, appear.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

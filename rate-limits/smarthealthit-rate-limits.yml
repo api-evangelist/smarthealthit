@@ -1,0 +1,67 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: SMART Health IT
+providerId: smarthealthit
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- SMART on FHIR
+- FHIR
+- Health IT
+- Sandbox
+- Rate Limiting
+- Quotas
+description: >-
+  SMART Health IT does not publish numeric rate limits for its public
+  sandboxes. The open FHIR servers (r2/r3/r4.smarthealthit.org), the SMART App
+  Launcher, and the reference Bulk Data server are free shared test
+  infrastructure operated for the developer community; capacity is governed by
+  fair use rather than documented per-key quotas, and there are no accounts or
+  API keys to meter against. The Bulk Data server exposes its own
+  pacing controls - the async $export pattern returns 202 with a status URL
+  and clients are expected to honor Retry-After when polling - and its
+  simulated database size, file pagination, and error rates are configurable
+  per test server instance.
+notes: >-
+  These are development sandboxes, not production services - do not run load
+  tests or production traffic against them. Production SMART on FHIR rate
+  limits are set by each EHR vendor's own developer program.
+sources:
+- https://docs.smarthealthit.org/
+- https://r4.smarthealthit.org/metadata
+- https://bulk-data.smarthealthit.org/
+responseCodes:
+  throttled: 429
+limits:
+- name: Open FHIR Sandbox Requests
+  scope: anonymous
+  metric: requests
+  limit: not published
+  notes: No documented numeric limit; shared fair-use test infrastructure with no API keys.
+- name: SMART App Launcher Sessions
+  scope: anonymous
+  metric: launches
+  limit: not published
+  notes: Launch simulations and OAuth flows are unmetered; no client registration exists to meter against.
+- name: Bulk Data Export Polling
+  scope: client
+  metric: requests
+  limit: honor Retry-After
+  notes: The $export status endpoint follows the FHIR async pattern; clients must poll politely and honor Retry-After headers.
+- name: Bulk Data Simulated Database
+  scope: server-instance
+  metric: patients
+  limit: configurable up to 1,000,000
+  notes: Each generated Bulk Data test server is configured with a simulated patient population size, resources per file, and optional error simulation.
+policies:
+- name: Fair Use
+  description: The sandboxes are shared community test servers with synthetic data; keep traffic modest and never send real PHI or production load.
+- name: Async Polling Etiquette
+  description: Bulk Data $export clients should poll the Content-Location status URL with exponential backoff and honor Retry-After on 202 and 429 responses.
+- name: Data Resets
+  description: Sandbox data is synthetic and may be reset or reloaded at any time; do not depend on writes persisting.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

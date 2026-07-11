@@ -1,0 +1,105 @@
+aid: smarthealthit
+name: SMART Health IT
+review:
+  question: Does SMART Health IT expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-11'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Every public surface SMART Health IT
+    operates is HTTP request/response - open FHIR REST servers
+    (r2/r3/r4.smarthealthit.org), the SMART App Launcher's OAuth 2.0
+    authorization endpoints and FHIR proxy, and the reference Bulk Data
+    server. Even the asynchronous piece, FHIR Bulk Data $export, follows the
+    FHIR async-request pattern (202 Accepted + Content-Location, client polls
+    the status endpoint honoring Retry-After, then downloads NDJSON files) -
+    client-initiated polling, not server push. There is no WebSocket, SSE, or
+    other event-driven transport to model.
+findings:
+  summary: |
+    SMART Health IT does not publish a documented public WebSocket API. It is
+    a standards organization (Computational Health Informatics Program at
+    Boston Children's Hospital / Harvard Medical School) whose public
+    developer surface is (1) fully open sandbox FHIR servers - the R4
+    endpoint at https://r4.smarthealthit.org serves 60+ resource types of
+    synthetic patient data over plain FHIR REST with no authentication and
+    CORS enabled; (2) the SMART App Launcher at
+    https://launch.smarthealthit.org, whose R4 proxy at /v/r4/fhir advertises
+    OAuth2 SMART-on-FHIR security with authorize/token/introspect endpoints
+    under /v/r4/auth/; and (3) the reference Bulk Data server at
+    https://bulk-data.smarthealthit.org implementing $export with SMART
+    Backend Services JWT authentication. All transports are HTTPS
+    request/response; no ws:// or wss:// endpoint appears anywhere in the
+    documentation, capability statements, or specifications.
+  openSource: |
+    Essentially everything is open. The SMART App Launch and Bulk Data
+    specifications are published through HL7; the launcher
+    (smart-on-fhir/smart-launcher-v2, Apache-2.0), the bulk data server, the
+    JS/Python/other client libraries, and the sample apps all live in the
+    github.com/smart-on-fhir organization. The sandboxes are free public
+    services intended for development and testing, not production PHI.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://r4.smarthealthit.org
+      documented: true
+      note: Open FHIR R4 sandbox (Smile CDR), no auth required; r2/r3 variants for DSTU2/STU3.
+    - protocol: REST
+      scheme: https
+      baseURL: https://launch.smarthealthit.org/v/r4/fhir
+      documented: true
+      note: SMART-protected FHIR R4 proxy behind the App Launcher; OAuth2 SMART App Launch (authorization code + PKCE) at /v/r4/auth/authorize and /v/r4/auth/token.
+    - protocol: REST
+      scheme: https
+      baseURL: https://bulk-data.smarthealthit.org/fhir
+      documented: true
+      note: FHIR Bulk Data $export via the async-request pattern - kick-off, poll status with Retry-After, download NDJSON. Client polling, not server push.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented on any SMART Health IT sandbox, specification, or capability statement as of the review date.
+  endpointsConfirmedRest:
+    - GET    https://r4.smarthealthit.org/metadata
+    - GET    https://r4.smarthealthit.org/Patient
+    - GET    https://r4.smarthealthit.org/Patient/{id}
+    - GET    https://r4.smarthealthit.org/Observation
+    - GET    https://r4.smarthealthit.org/Condition
+    - GET    https://r4.smarthealthit.org/MedicationRequest
+    - GET    https://launch.smarthealthit.org/v/r4/fhir/metadata
+    - GET    https://launch.smarthealthit.org/v/r4/auth/authorize
+    - POST   https://launch.smarthealthit.org/v/r4/auth/token
+    - POST   https://launch.smarthealthit.org/v/r4/auth/introspect
+    - GET    https://bulk-data.smarthealthit.org/fhir/$export
+    - GET    https://bulk-data.smarthealthit.org/fhir/Patient/$export
+    - GET    https://bulk-data.smarthealthit.org/fhir/Group/{id}/$export
+sources:
+  - url: https://smarthealthit.org/
+    type: Website
+    note: Project overview - SMART on FHIR standard, sandboxes, Health Cards, run by CHIP at Boston Children's Hospital.
+  - url: https://docs.smarthealthit.org/
+    type: Documentation
+    note: Developer docs listing the open r2/r3/r4 sandboxes, the App Launcher, the Bulk Data server, and client libraries. No WebSocket mentioned.
+  - url: https://r4.smarthealthit.org/metadata
+    type: APIReference
+    note: Live FHIR R4 CapabilityStatement (Smile CDR); 60+ resource types, full REST interactions, CORS true, no OAuth requirement.
+  - url: https://launch.smarthealthit.org/v/r4/fhir/metadata
+    type: APIReference
+    note: Launcher proxy CapabilityStatement advertising OAuth2 SMART-on-FHIR authorize/token/introspect under /v/r4/auth/.
+  - url: https://bulk-data.smarthealthit.org/
+    type: Documentation
+    note: Reference Bulk Data server - $export, SMART Backend Services JWT auth (ES384/RS384), configurable synthetic database and error simulation.
+  - url: https://hl7.org/fhir/smart-app-launch/
+    type: Specification
+    note: HL7 SMART App Launch v2.2.0 - OAuth 2.0 profile, scopes, launch context, backend services, token introspection. All HTTP.
+  - url: https://github.com/smart-on-fhir/smart-launcher-v2
+    type: SourceCode
+    note: Open source (Apache-2.0) launcher behind launch.smarthealthit.org.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. SMART Health IT's public sandboxes
+    and specifications are HTTP-only: open FHIR REST, OAuth 2.0 SMART App
+    Launch, and the Bulk Data async polling pattern. No AsyncAPI document was
+    created because there is no server-push transport to model.

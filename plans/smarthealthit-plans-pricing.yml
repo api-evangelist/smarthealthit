@@ -1,0 +1,63 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: SMART Health IT
+providerId: smarthealthit
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: true
+tags:
+- SMART on FHIR
+- FHIR
+- Health IT
+- Open Standards
+- Plans
+description: >-
+  Everything SMART Health IT operates is free and open. It is a standards
+  organization (Boston Children's Hospital / Harvard Medical School), not a
+  commercial API vendor - there are no paid tiers, no API keys to buy, and no
+  sales motion. The specifications (SMART App Launch, FHIR Bulk Data, SMART
+  Health Cards) are open HL7/community standards, the client libraries and
+  reference servers are open source under the smart-on-fhir GitHub
+  organization, and the public sandboxes (open FHIR R2/R3/R4 servers, the
+  SMART App Launcher, and the reference Bulk Data server) are free to use with
+  no registration. The sandboxes serve synthetic data only and are intended
+  for development and testing, not production workloads or real PHI.
+notes: >-
+  Production SMART on FHIR access is obtained from EHR vendors (Epic, Oracle
+  Health/Cerner, athenahealth, and others) under their own developer programs
+  and terms - those are separate providers, not SMART Health IT plans.
+sources:
+- https://smarthealthit.org/
+- https://docs.smarthealthit.org/
+- https://github.com/smart-on-fhir
+plans:
+- id: smarthealthit-open-sandbox
+  name: Open Sandbox (Free)
+  type: free
+  description: >-
+    The complete public surface - the open FHIR R4 sandbox at
+    r4.smarthealthit.org (plus DSTU2/STU3 variants), the SMART App Launcher
+    at launch.smarthealthit.org, and the reference Bulk Data server at
+    bulk-data.smarthealthit.org. No registration, no API key, no charge; use
+    is bounded only by fair-use expectations for a shared test service.
+  entries:
+  - label: Sandbox Requests
+    name: sandbox_requests
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: free (shared test infrastructure, synthetic data only)
+    userMultiplied: false
+  elements:
+  - name: Open FHIR R4/R3/R2 Endpoints
+  - name: SMART App Launcher (EHR, Patient Portal, Standalone Launches)
+  - name: Bulk Data $export Reference Server
+  - name: Open Source Client Libraries
+  - name: HL7 SMART App Launch Specification
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

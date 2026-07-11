@@ -1,0 +1,203 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SMART Health IT Sandbox FHIR APIs",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Open FHIR R4 Sandbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Retrieve the CapabilityStatement.", "type": "http" },
+          "http": { "method": "GET", "url": "https://r4.smarthealthit.org/metadata" },
+          "docs": "Returns the FHIR R4 CapabilityStatement for the open sandbox. No authentication required."
+        },
+        {
+          "info": { "name": "Search patients.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Patient",
+            "params": [
+              { "name": "_count", "value": "10", "type": "query", "description": "Entries per page." },
+              { "name": "name", "value": "", "type": "query", "description": "Match on patient name parts." }
+            ]
+          },
+          "docs": "Searches synthetic Patient resources; returns a searchset Bundle."
+        },
+        {
+          "info": { "name": "Read a patient.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Patient/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The logical id of the Patient." }
+            ]
+          },
+          "docs": "Reads a single synthetic Patient resource by logical id."
+        },
+        {
+          "info": { "name": "Search observations for a patient.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Observation",
+            "params": [
+              { "name": "patient", "value": "", "type": "query", "description": "Patient id to scope the search." },
+              { "name": "category", "value": "vital-signs", "type": "query", "description": "Observation category." }
+            ]
+          },
+          "docs": "Searches Observation resources (vitals, labs) scoped to a patient."
+        },
+        {
+          "info": { "name": "Search conditions for a patient.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Condition",
+            "params": [
+              { "name": "patient", "value": "", "type": "query", "description": "Patient id to scope the search." }
+            ]
+          },
+          "docs": "Searches Condition resources (problems and diagnoses) for a patient."
+        },
+        {
+          "info": { "name": "Search medication requests for a patient.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/MedicationRequest",
+            "params": [
+              { "name": "patient", "value": "", "type": "query", "description": "Patient id to scope the search." }
+            ]
+          },
+          "docs": "Searches MedicationRequest resources (prescriptions) for a patient."
+        },
+        {
+          "info": { "name": "Search immunizations for a patient.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Immunization",
+            "params": [
+              { "name": "patient", "value": "", "type": "query", "description": "Patient id to scope the search." }
+            ]
+          },
+          "docs": "Searches Immunization resources (vaccination history) for a patient."
+        },
+        {
+          "info": { "name": "Search allergies for a patient.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/AllergyIntolerance",
+            "params": [
+              { "name": "patient", "value": "", "type": "query", "description": "Patient id to scope the search." }
+            ]
+          },
+          "docs": "Searches AllergyIntolerance resources for a patient."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "SMART App Launch (Launcher)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Authorize (SMART App Launch).", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://launch.smarthealthit.org/v/r4/auth/authorize",
+            "params": [
+              { "name": "response_type", "value": "code", "type": "query", "description": "OAuth response type." },
+              { "name": "client_id", "value": "my_app", "type": "query", "description": "Any client id; no registration required on the sandbox." },
+              { "name": "redirect_uri", "value": "http://localhost:3000/callback", "type": "query", "description": "App redirect URI." },
+              { "name": "scope", "value": "launch/patient patient/*.read openid fhirUser", "type": "query", "description": "SMART scopes." },
+              { "name": "state", "value": "abc123", "type": "query", "description": "Opaque state value." },
+              { "name": "aud", "value": "https://launch.smarthealthit.org/v/r4/fhir", "type": "query", "description": "FHIR base URL the token will be used against." }
+            ]
+          },
+          "docs": "OAuth 2.0 authorization endpoint (authorization code + PKCE). Best exercised in a browser."
+        },
+        {
+          "info": { "name": "Exchange code for token.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://launch.smarthealthit.org/v/r4/auth/token",
+            "body": { "type": "formUrlEncoded", "data": "grant_type=authorization_code&code=&redirect_uri=http://localhost:3000/callback&code_verifier=&client_id=my_app" }
+          },
+          "docs": "Exchanges an authorization code for an access token carrying SMART launch context (patient, encounter, fhirUser)."
+        },
+        {
+          "info": { "name": "Read protected CapabilityStatement.", "type": "http" },
+          "http": { "method": "GET", "url": "https://launch.smarthealthit.org/v/r4/fhir/metadata" },
+          "docs": "CapabilityStatement of the launcher's FHIR proxy, advertising the OAuth2 SMART-on-FHIR authorize/token/introspect endpoints."
+        },
+        {
+          "info": { "name": "Read patient in context (protected).", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://launch.smarthealthit.org/v/r4/fhir/Patient/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "Patient id from launch context." }
+            ],
+            "headers": [
+              { "name": "Authorization", "value": "Bearer {{accessToken}}" }
+            ]
+          },
+          "docs": "Reads the patient granted in launch context using the SMART access token."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Bulk Data Export",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "Start system-level $export.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://bulk-data.smarthealthit.org/fhir/$export",
+            "headers": [
+              { "name": "Accept", "value": "application/fhir+json" },
+              { "name": "Prefer", "value": "respond-async" },
+              { "name": "Authorization", "value": "Bearer {{accessToken}}" }
+            ]
+          },
+          "docs": "Kicks off an async export of all resources; responds 202 with a Content-Location status URL to poll. Requires a SMART Backend Services token."
+        },
+        {
+          "info": { "name": "Start patient-level $export.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://bulk-data.smarthealthit.org/fhir/Patient/$export",
+            "headers": [
+              { "name": "Accept", "value": "application/fhir+json" },
+              { "name": "Prefer", "value": "respond-async" },
+              { "name": "Authorization", "value": "Bearer {{accessToken}}" }
+            ]
+          },
+          "docs": "Kicks off an async export of all data for all patients."
+        },
+        {
+          "info": { "name": "Start group-level $export.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://bulk-data.smarthealthit.org/fhir/Group/:id/$export",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The Group id to export." }
+            ],
+            "headers": [
+              { "name": "Accept", "value": "application/fhir+json" },
+              { "name": "Prefer", "value": "respond-async" },
+              { "name": "Authorization", "value": "Bearer {{accessToken}}" }
+            ]
+          },
+          "docs": "Kicks off an async export of all data for the patients in a Group."
+        }
+      ]
+    }
+  ]
+}

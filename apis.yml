@@ -1,0 +1,140 @@
+aid: smarthealthit
+url: https://raw.githubusercontent.com/api-evangelist/smarthealthit/refs/heads/main/apis.yml
+name: SMART Health IT
+kind: organization
+description: SMART Health IT is the open standards and open source project run by
+  the Computational Health Informatics Program at Boston Children's Hospital and
+  Harvard Medical School that defines SMART on FHIR - the OAuth 2.0-based SMART
+  App Launch framework that lets patient-facing and clinician-facing apps plug
+  into any EHR and read clinical records over FHIR. The project publishes the
+  HL7 SMART App Launch and FHIR Bulk Data specifications, the SMART Health Cards
+  and SMART Health Links verifiable clinical data frameworks, open source client
+  libraries, and free public sandboxes - an open FHIR R4 server loaded with
+  synthetic patient records, the SMART App Launcher for simulating EHR and
+  patient portal launches, and a reference Bulk Data server for testing
+  system-level export.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- SMART on FHIR
+- FHIR
+- Health IT
+- EHR Integration
+- Clinical Data
+- Clinical Records
+- Patient Facing
+- Open Standards
+- Interoperability
+created: '2026-07-11'
+modified: '2026-07-11'
+specificationVersion: '0.19'
+apis:
+- aid: smarthealthit:smarthealthit-sandbox-fhir-r4-api
+  name: SMART Sandbox FHIR R4 API
+  tags:
+  - FHIR R4
+  - Clinical Records
+  - Sandbox
+  - Synthetic Patients
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://r4.smarthealthit.org
+  baseURL: https://r4.smarthealthit.org
+  properties:
+  - url: https://docs.smarthealthit.org/
+    type: Documentation
+  - url: https://r4.smarthealthit.org/metadata
+    type: APIReference
+  - url: openapi/smarthealthit-openapi.yml
+    type: OpenAPI
+  description: Free, fully open FHIR R4 server loaded with synthetic patient
+    records for app development and testing. No registration or authentication
+    is required - read, search, create, update, and delete clinical resources
+    such as Patient, Observation, Condition, MedicationRequest, Encounter,
+    Immunization, and AllergyIntolerance over plain FHIR REST. Companion open
+    endpoints exist for DSTU2 (r2.smarthealthit.org) and STU3
+    (r3.smarthealthit.org).
+- aid: smarthealthit:smarthealthit-smart-app-launch-api
+  name: SMART App Launch Authorization API
+  tags:
+  - SMART App Launch
+  - OAuth 2.0
+  - EHR Launch
+  - Patient Portal
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://launch.smarthealthit.org
+  baseURL: https://launch.smarthealthit.org/v/r4
+  properties:
+  - url: https://hl7.org/fhir/smart-app-launch/
+    type: Documentation
+  - url: https://launch.smarthealthit.org/v/r4/fhir/metadata
+    type: APIReference
+  - url: openapi/smarthealthit-openapi.yml
+    type: OpenAPI
+  description: The SMART App Launcher simulates EHR launches, patient portal
+    launches, and standalone launches against a SMART-protected FHIR R4 proxy,
+    with no client registration required. It implements the HL7 SMART App
+    Launch specification (OAuth 2.0 authorization code with PKCE, launch
+    context, clinical scopes, and token introspection) at
+    /v/r4/auth/authorize, /v/r4/auth/token, and /v/r4/auth/introspect, with
+    the protected FHIR surface at /v/r4/fhir.
+- aid: smarthealthit:smarthealthit-bulk-data-api
+  name: SMART Bulk Data Export API
+  tags:
+  - Bulk Data
+  - FHIR Export
+  - Backend Services
+  - Population Health
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://bulk-data.smarthealthit.org
+  baseURL: https://bulk-data.smarthealthit.org/fhir
+  properties:
+  - url: https://docs.smarthealthit.org/
+    type: Documentation
+  - url: https://bulk-data.smarthealthit.org/
+    type: APIReference
+  - url: openapi/smarthealthit-openapi.yml
+    type: OpenAPI
+  description: Reference implementation of the HL7 FHIR Bulk Data Access
+    specification for testing population-level export. Kick off system,
+    Patient, and Group $export operations, poll the async status endpoint, and
+    download NDJSON files. Authenticates with SMART Backend Services
+    (client_credentials with a signed JWT assertion using ES384 or RS384
+    keys), with a configurable simulated database of up to one million
+    synthetic patients and built-in error simulation.
+- aid: smarthealthit:smarthealthit-health-cards-framework
+  name: SMART Health Cards Framework
+  tags:
+  - Health Cards
+  - Verifiable Credentials
+  - Immunization Records
+  - Health Links
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://smarthealth.cards
+  baseURL: https://spec.smarthealth.cards
+  properties:
+  - url: https://spec.smarthealth.cards/
+    type: Documentation
+  description: Specification for issuing and verifying tamper-evident clinical
+    records - vaccination history, lab results, and insurance cards - as signed
+    JWS payloads carried in QR codes or files. Issuers expose the FHIR
+    $health-cards-issue operation; verifiers validate signatures against
+    published issuer keys. SMART Health Links extend the model to shareable
+    links over richer clinical data. Maintained with the Verifiable Clinical
+    Information (VCI) coalition.
+common:
+- type: Website
+  url: https://smarthealthit.org
+- type: Documentation
+  url: https://docs.smarthealthit.org
+- type: GitHubOrganization
+  url: https://github.com/smart-on-fhir
+- type: Specification
+  url: https://hl7.org/fhir/smart-app-launch/
+- type: Plans
+  url: plans/smarthealthit-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/smarthealthit-rate-limits.yml
+- type: FinOps
+  url: finops/smarthealthit-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
