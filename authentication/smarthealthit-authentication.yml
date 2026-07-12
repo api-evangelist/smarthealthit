@@ -1,0 +1,25 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/smarthealthit-openapi.yml
+summary:
+  types:
+  - oauth2
+  oauth2_flows:
+  - authorizationCode
+  - clientCredentials
+schemes:
+- name: smartOnFhir
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://launch.smarthealthit.org/v/r4/auth/authorize
+    tokenUrl: https://launch.smarthealthit.org/v/r4/auth/token
+    scopes: 6
+  - flow: clientCredentials
+    tokenUrl: https://launch.smarthealthit.org/v/r4/auth/token
+    scopes: 1
+  description: HL7 SMART App Launch OAuth 2.0 profile, used by the launcher's protected FHIR
+    proxy. The open r4.smarthealthit.org sandbox requires no authentication; the Bulk Data server
+    uses SMART Backend Services (client_credentials with a signed JWT assertion).
+  sources:
+  - openapi/smarthealthit-openapi.yml

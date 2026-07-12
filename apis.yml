@@ -121,6 +121,12 @@ apis:
     links over richer clinical data. Maintained with the Verifiable Clinical
     Information (VCI) coalition.
 common:
+- type: VulnerabilityDisclosure
+  url: security/smarthealthit-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/smarthealthit-domain-security.yml
+- type: Authentication
+  url: authentication/smarthealthit-authentication.yml
 - type: Website
   url: https://smarthealthit.org
 - type: Documentation
