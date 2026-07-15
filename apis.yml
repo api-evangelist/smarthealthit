@@ -121,6 +121,8 @@ apis:
     links over richer clinical data. Maintained with the Verifiable Clinical
     Information (VCI) coalition.
 common:
+- type: AgenticAccess
+  url: agentic-access/smarthealthit-agentic-access.yml
 - type: VulnerabilityDisclosure
   url: security/smarthealthit-vulnerability-disclosure.yml
 - type: DomainSecurity
