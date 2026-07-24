@@ -1,0 +1,73 @@
+openapi: 3.0.3
+info:
+  title: SMART Health IT Sandbox FHIR APIs Bulk Data Conformance API
+  description: Public, free sandbox APIs operated by SMART Health IT (Computational Health Informatics Program, Boston Children's Hospital / Harvard Medical School) for building and testing SMART on FHIR apps. Three surfaces are described here. (1) The open FHIR R4 sandbox at https://r4.smarthealthit.org - synthetic patient records served over plain FHIR REST with no authentication (DSTU2 and STU3 variants exist at r2/r3.smarthealthit.org). (2) The SMART App Launcher's protected FHIR R4 proxy at https://launch.smarthealthit.org/v/r4/fhir, which requires an OAuth 2.0 access token obtained through the HL7 SMART App Launch flow at /v/r4/auth/authorize and /v/r4/auth/token (no client registration needed). (3) The reference Bulk Data server at https://bulk-data.smarthealthit.org/fhir, which implements FHIR Bulk Data $export with SMART Backend Services JWT authentication. All data is synthetic; these servers are for development and testing, never real PHI.
+  version: '1.0'
+  contact:
+    name: SMART Health IT
+    url: https://smarthealthit.org
+  license:
+    name: Apache 2.0
+    url: https://github.com/smart-on-fhir/smart-launcher-v2/blob/main/LICENSE
+servers:
+- url: https://r4.smarthealthit.org
+  description: Open FHIR R4 sandbox (no authentication required)
+- url: https://launch.smarthealthit.org/v/r4/fhir
+  description: SMART App Launcher protected FHIR R4 proxy (SMART App Launch OAuth 2.0)
+- url: https://bulk-data.smarthealthit.org/fhir
+  description: Reference Bulk Data server (SMART Backend Services authentication)
+security:
+- smartOnFhir: []
+- {}
+tags:
+- name: Conformance
+  description: Server capability discovery.
+paths:
+  /metadata:
+    get:
+      operationId: getCapabilityStatement
+      tags:
+      - Conformance
+      summary: Retrieve the FHIR CapabilityStatement
+      description: Returns the server's FHIR R4 CapabilityStatement. On the launcher proxy the security section advertises the OAuth2 SMART-on-FHIR service with authorize, token, and introspect extension URIs.
+      security: []
+      responses:
+        '200':
+          description: The server CapabilityStatement.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FhirResource'
+components:
+  schemas:
+    FhirResource:
+      type: object
+      description: Any FHIR R4 resource, identified by its resourceType element.
+      properties:
+        resourceType:
+          type: string
+        id:
+          type: string
+      additionalProperties: true
+  securitySchemes:
+    smartOnFhir:
+      type: oauth2
+      description: HL7 SMART App Launch OAuth 2.0 profile, used by the launcher's protected FHIR proxy. The open r4.smarthealthit.org sandbox requires no authentication; the Bulk Data server uses SMART Backend Services (client_credentials with a signed JWT assertion).
+      flows:
+        authorizationCode:
+          authorizationUrl: https://launch.smarthealthit.org/v/r4/auth/authorize
+          tokenUrl: https://launch.smarthealthit.org/v/r4/auth/token
+          scopes:
+            openid: OpenID Connect identity.
+            fhirUser: Identity of the launching user as a FHIR resource.
+            launch/patient: Request a patient in context at launch.
+            patient/*.read: Read all resources for the patient in context.
+            user/*.read: Read all resources the user can access.
+            system/*.read: Backend services system-level read access.
+        clientCredentials:
+          tokenUrl: https://launch.smarthealthit.org/v/r4/auth/token
+          scopes:
+            system/*.read: Backend services system-level read access.
+externalDocs:
+  description: SMART on FHIR developer documentation
+  url: https://docs.smarthealthit.org

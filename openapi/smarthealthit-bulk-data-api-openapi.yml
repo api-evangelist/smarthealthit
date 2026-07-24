@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: SMART Health IT Sandbox FHIR APIs Bulk Data API
+  description: Public, free sandbox APIs operated by SMART Health IT (Computational Health Informatics Program, Boston Children's Hospital / Harvard Medical School) for building and testing SMART on FHIR apps. Three surfaces are described here. (1) The open FHIR R4 sandbox at https://r4.smarthealthit.org - synthetic patient records served over plain FHIR REST with no authentication (DSTU2 and STU3 variants exist at r2/r3.smarthealthit.org). (2) The SMART App Launcher's protected FHIR R4 proxy at https://launch.smarthealthit.org/v/r4/fhir, which requires an OAuth 2.0 access token obtained through the HL7 SMART App Launch flow at /v/r4/auth/authorize and /v/r4/auth/token (no client registration needed). (3) The reference Bulk Data server at https://bulk-data.smarthealthit.org/fhir, which implements FHIR Bulk Data $export with SMART Backend Services JWT authentication. All data is synthetic; these servers are for development and testing, never real PHI.
+  version: '1.0'
+  contact:
+    name: SMART Health IT
+    url: https://smarthealthit.org
+  license:
+    name: Apache 2.0
+    url: https://github.com/smart-on-fhir/smart-launcher-v2/blob/main/LICENSE
+servers:
+- url: https://r4.smarthealthit.org
+  description: Open FHIR R4 sandbox (no authentication required)
+- url: https://launch.smarthealthit.org/v/r4/fhir
+  description: SMART App Launcher protected FHIR R4 proxy (SMART App Launch OAuth 2.0)
+- url: https://bulk-data.smarthealthit.org/fhir
+  description: Reference Bulk Data server (SMART Backend Services authentication)
+security:
+- smartOnFhir: []
+- {}
+tags:
+- name: Bulk Data
+  description: FHIR Bulk Data $export operations on the reference Bulk Data server.
+paths:
+  /$export:
+    servers:
+    - url: https://bulk-data.smarthealthit.org/fhir
+      description: Reference Bulk Data server
+    get:
+      operationId: bulkSystemExport
+      tags:
+      - Bulk Data
+      summary: Start a system-level bulk export (Bulk Data server only)
+      description: Kicks off an asynchronous export of all resources on the reference Bulk Data server (https://bulk-data.smarthealthit.org/fhir). Requires the Prefer respond-async header and a SMART Backend Services access token. Responds 202 with a Content-Location status URL to poll (honor Retry-After); when complete, the status endpoint returns a manifest of NDJSON file URLs to download.
+      parameters:
+      - $ref: '#/components/parameters/OutputFormat'
+      - $ref: '#/components/parameters/Type'
+      - $ref: '#/components/parameters/Since'
+      responses:
+        '202':
+          description: Export accepted; poll the Content-Location URL for status.
+          headers:
+            Content-Location:
+              description: Absolute URL of the export status endpoint.
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /Patient/$export:
+    servers:
+    - url: https://bulk-data.smarthealthit.org/fhir
+      description: Reference Bulk Data server
+    get:
+      operationId: bulkPatientExport
+      tags:
+      - Bulk Data
+      summary: Start a patient-level bulk export (Bulk Data server only)
+      description: Kicks off an asynchronous export of all data for all patients on the reference Bulk Data server, following the same async-request pattern as the system-level export.
+      parameters:
+      - $ref: '#/components/parameters/OutputFormat'
+      - $ref: '#/components/parameters/Type'
+      - $ref: '#/components/parameters/Since'
+      responses:
+        '202':
+          description: Export accepted; poll the Content-Location URL for status.
+          headers:
+            Content-Location:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /Group/{id}/$export:
+    servers:
+    - url: https://bulk-data.smarthealthit.org/fhir
+      description: Reference Bulk Data server
+    get:
+      operationId: bulkGroupExport
+      tags:
+      - Bulk Data
+      summary: Start a group-level bulk export (Bulk Data server only)
+      description: Kicks off an asynchronous export of all data for the patients in a Group on the reference Bulk Data server.
+      parameters:
+      - $ref: '#/components/parameters/ResourceId'
+      - $ref: '#/components/parameters/OutputFormat'
+      - $ref: '#/components/parameters/Type'
+      - $ref: '#/components/parameters/Since'
+      responses:
+        '202':
+          description: Export accepted; poll the Content-Location URL for status.
+          headers:
+            Content-Location:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The logical id of the resource.
+      schema:
+        type: string
+    Since:
+      name: _since
+      in: query
+      description: Only include resources modified after this instant.
+      schema:
+        type: string
+        format: date-time
+    Type:
+      name: _type
+      in: query
+      description: Comma-separated FHIR resource types to include in the export.
+      schema:
+        type: string
+    OutputFormat:
+      name: _outputFormat
+      in: query
+      description: Requested bulk output format; defaults to application/fhir+ndjson.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token (protected servers only).
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+  schemas:
+    OperationOutcome:
+      type: object
+      description: A FHIR OperationOutcome describing an error.
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - OperationOutcome
+        issue:
+          type: array
+          items:
+            type: object
+            properties:
+              severity:
+                type: string
+              code:
+                type: string
+              diagnostics:
+                type: string
+  securitySchemes:
+    smartOnFhir:
+      type: oauth2
+      description: HL7 SMART App Launch OAuth 2.0 profile, used by the launcher's protected FHIR proxy. The open r4.smarthealthit.org sandbox requires no authentication; the Bulk Data server uses SMART Backend Services (client_credentials with a signed JWT assertion).
+      flows:
+        authorizationCode:
+          authorizationUrl: https://launch.smarthealthit.org/v/r4/auth/authorize
+          tokenUrl: https://launch.smarthealthit.org/v/r4/auth/token
+          scopes:
+            openid: OpenID Connect identity.
+            fhirUser: Identity of the launching user as a FHIR resource.
+            launch/patient: Request a patient in context at launch.
+            patient/*.read: Read all resources for the patient in context.
+            user/*.read: Read all resources the user can access.
+            system/*.read: Backend services system-level read access.
+        clientCredentials:
+          tokenUrl: https://launch.smarthealthit.org/v/r4/auth/token
+          scopes:
+            system/*.read: Backend services system-level read access.
+externalDocs:
+  description: SMART on FHIR developer documentation
+  url: https://docs.smarthealthit.org

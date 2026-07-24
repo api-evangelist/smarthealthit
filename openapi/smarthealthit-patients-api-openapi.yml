@@ -1,0 +1,177 @@
+openapi: 3.0.3
+info:
+  title: SMART Health IT Sandbox FHIR APIs Bulk Data Patients API
+  description: Public, free sandbox APIs operated by SMART Health IT (Computational Health Informatics Program, Boston Children's Hospital / Harvard Medical School) for building and testing SMART on FHIR apps. Three surfaces are described here. (1) The open FHIR R4 sandbox at https://r4.smarthealthit.org - synthetic patient records served over plain FHIR REST with no authentication (DSTU2 and STU3 variants exist at r2/r3.smarthealthit.org). (2) The SMART App Launcher's protected FHIR R4 proxy at https://launch.smarthealthit.org/v/r4/fhir, which requires an OAuth 2.0 access token obtained through the HL7 SMART App Launch flow at /v/r4/auth/authorize and /v/r4/auth/token (no client registration needed). (3) The reference Bulk Data server at https://bulk-data.smarthealthit.org/fhir, which implements FHIR Bulk Data $export with SMART Backend Services JWT authentication. All data is synthetic; these servers are for development and testing, never real PHI.
+  version: '1.0'
+  contact:
+    name: SMART Health IT
+    url: https://smarthealthit.org
+  license:
+    name: Apache 2.0
+    url: https://github.com/smart-on-fhir/smart-launcher-v2/blob/main/LICENSE
+servers:
+- url: https://r4.smarthealthit.org
+  description: Open FHIR R4 sandbox (no authentication required)
+- url: https://launch.smarthealthit.org/v/r4/fhir
+  description: SMART App Launcher protected FHIR R4 proxy (SMART App Launch OAuth 2.0)
+- url: https://bulk-data.smarthealthit.org/fhir
+  description: Reference Bulk Data server (SMART Backend Services authentication)
+security:
+- smartOnFhir: []
+- {}
+tags:
+- name: Patients
+  description: Synthetic patient demographic records.
+paths:
+  /Patient:
+    get:
+      operationId: searchPatients
+      tags:
+      - Patients
+      summary: Search patients
+      description: Searches synthetic Patient resources. Supports standard FHIR search parameters such as name, birthdate, gender, and _count. Returns a searchset Bundle.
+      parameters:
+      - $ref: '#/components/parameters/Count'
+      - name: name
+        in: query
+        description: Match on patient name parts.
+        schema:
+          type: string
+      - name: birthdate
+        in: query
+        description: Match on date of birth (supports FHIR date prefixes such as ge/le).
+        schema:
+          type: string
+      - name: gender
+        in: query
+        description: Administrative gender code.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A searchset Bundle of Patient resources.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Bundle'
+  /Patient/{id}:
+    get:
+      operationId: getPatient
+      tags:
+      - Patients
+      summary: Read a patient
+      description: Reads a single synthetic Patient resource by logical id.
+      parameters:
+      - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: The requested Patient resource.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/FhirResource'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    Count:
+      name: _count
+      in: query
+      description: Maximum number of entries per page of the returned Bundle.
+      schema:
+        type: integer
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The logical id of the resource.
+      schema:
+        type: string
+  schemas:
+    FhirResource:
+      type: object
+      description: Any FHIR R4 resource, identified by its resourceType element.
+      properties:
+        resourceType:
+          type: string
+        id:
+          type: string
+      additionalProperties: true
+    Bundle:
+      type: object
+      description: A FHIR R4 searchset Bundle.
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - Bundle
+        type:
+          type: string
+        total:
+          type: integer
+        link:
+          type: array
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+              url:
+                type: string
+        entry:
+          type: array
+          items:
+            type: object
+            properties:
+              fullUrl:
+                type: string
+              resource:
+                $ref: '#/components/schemas/FhirResource'
+    OperationOutcome:
+      type: object
+      description: A FHIR OperationOutcome describing an error.
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - OperationOutcome
+        issue:
+          type: array
+          items:
+            type: object
+            properties:
+              severity:
+                type: string
+              code:
+                type: string
+              diagnostics:
+                type: string
+  responses:
+    NotFound:
+      description: No resource exists with the given id.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
+  securitySchemes:
+    smartOnFhir:
+      type: oauth2
+      description: HL7 SMART App Launch OAuth 2.0 profile, used by the launcher's protected FHIR proxy. The open r4.smarthealthit.org sandbox requires no authentication; the Bulk Data server uses SMART Backend Services (client_credentials with a signed JWT assertion).
+      flows:
+        authorizationCode:
+          authorizationUrl: https://launch.smarthealthit.org/v/r4/auth/authorize
+          tokenUrl: https://launch.smarthealthit.org/v/r4/auth/token
+          scopes:
+            openid: OpenID Connect identity.
+            fhirUser: Identity of the launching user as a FHIR resource.
+            launch/patient: Request a patient in context at launch.
+            patient/*.read: Read all resources for the patient in context.
+            user/*.read: Read all resources the user can access.
+            system/*.read: Backend services system-level read access.
+        clientCredentials:
+          tokenUrl: https://launch.smarthealthit.org/v/r4/auth/token
+          scopes:
+            system/*.read: Backend services system-level read access.
+externalDocs:
+  description: SMART on FHIR developer documentation
+  url: https://docs.smarthealthit.org

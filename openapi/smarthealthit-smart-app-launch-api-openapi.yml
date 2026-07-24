@@ -1,0 +1,156 @@
+openapi: 3.0.3
+info:
+  title: SMART Health IT Sandbox FHIR APIs Bulk Data SMART App Launch API
+  description: Public, free sandbox APIs operated by SMART Health IT (Computational Health Informatics Program, Boston Children's Hospital / Harvard Medical School) for building and testing SMART on FHIR apps. Three surfaces are described here. (1) The open FHIR R4 sandbox at https://r4.smarthealthit.org - synthetic patient records served over plain FHIR REST with no authentication (DSTU2 and STU3 variants exist at r2/r3.smarthealthit.org). (2) The SMART App Launcher's protected FHIR R4 proxy at https://launch.smarthealthit.org/v/r4/fhir, which requires an OAuth 2.0 access token obtained through the HL7 SMART App Launch flow at /v/r4/auth/authorize and /v/r4/auth/token (no client registration needed). (3) The reference Bulk Data server at https://bulk-data.smarthealthit.org/fhir, which implements FHIR Bulk Data $export with SMART Backend Services JWT authentication. All data is synthetic; these servers are for development and testing, never real PHI.
+  version: '1.0'
+  contact:
+    name: SMART Health IT
+    url: https://smarthealthit.org
+  license:
+    name: Apache 2.0
+    url: https://github.com/smart-on-fhir/smart-launcher-v2/blob/main/LICENSE
+servers:
+- url: https://r4.smarthealthit.org
+  description: Open FHIR R4 sandbox (no authentication required)
+- url: https://launch.smarthealthit.org/v/r4/fhir
+  description: SMART App Launcher protected FHIR R4 proxy (SMART App Launch OAuth 2.0)
+- url: https://bulk-data.smarthealthit.org/fhir
+  description: Reference Bulk Data server (SMART Backend Services authentication)
+security:
+- smartOnFhir: []
+- {}
+tags:
+- name: SMART App Launch
+  description: OAuth 2.0 authorization endpoints on the SMART App Launcher.
+paths:
+  /auth/authorize:
+    servers:
+    - url: https://launch.smarthealthit.org/v/r4
+      description: SMART App Launcher R4 base (auth endpoints are siblings of /fhir)
+    get:
+      operationId: smartAuthorize
+      tags:
+      - SMART App Launch
+      summary: SMART App Launch authorization endpoint (launcher only)
+      description: OAuth 2.0 authorization endpoint on the SMART App Launcher, located at https://launch.smarthealthit.org/v/r4/auth/authorize (a sibling of the /fhir base, so this path carries its own server). Initiates the SMART App Launch authorization code flow with PKCE, accepting standard OAuth parameters plus SMART launch context (launch, aud/aud-validated FHIR base, and clinical scopes such as patient/*.read, launch/patient, openid, and fhirUser). No client registration is required on the sandbox.
+      security: []
+      parameters:
+      - name: response_type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - code
+      - name: client_id
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: redirect_uri
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: scope
+        in: query
+        required: true
+        description: Space-separated SMART scopes, for example "launch/patient patient/*.read openid fhirUser".
+        schema:
+          type: string
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: aud
+        in: query
+        required: true
+        description: The FHIR base URL the token will be used against.
+        schema:
+          type: string
+      responses:
+        '302':
+          description: Redirects back to the app's redirect_uri with an authorization code.
+  /auth/token:
+    servers:
+    - url: https://launch.smarthealthit.org/v/r4
+      description: SMART App Launcher R4 base (auth endpoints are siblings of /fhir)
+    post:
+      operationId: smartToken
+      tags:
+      - SMART App Launch
+      summary: SMART App Launch token endpoint (launcher only)
+      description: OAuth 2.0 token endpoint on the SMART App Launcher, located at https://launch.smarthealthit.org/v/r4/auth/token. Exchanges an authorization code (with PKCE verifier) for an access token carrying SMART launch context (patient, encounter, fhirUser), or accepts a SMART Backend Services client_credentials grant with a signed JWT client assertion.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - authorization_code
+                  - client_credentials
+                  - refresh_token
+                code:
+                  type: string
+                redirect_uri:
+                  type: string
+                code_verifier:
+                  type: string
+                client_assertion_type:
+                  type: string
+                client_assertion:
+                  type: string
+                scope:
+                  type: string
+      responses:
+        '200':
+          description: An access token response with SMART context parameters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+                  scope:
+                    type: string
+                  patient:
+                    type: string
+                    description: Patient id in context, when launch/patient was granted.
+                  encounter:
+                    type: string
+                  id_token:
+                    type: string
+components:
+  securitySchemes:
+    smartOnFhir:
+      type: oauth2
+      description: HL7 SMART App Launch OAuth 2.0 profile, used by the launcher's protected FHIR proxy. The open r4.smarthealthit.org sandbox requires no authentication; the Bulk Data server uses SMART Backend Services (client_credentials with a signed JWT assertion).
+      flows:
+        authorizationCode:
+          authorizationUrl: https://launch.smarthealthit.org/v/r4/auth/authorize
+          tokenUrl: https://launch.smarthealthit.org/v/r4/auth/token
+          scopes:
+            openid: OpenID Connect identity.
+            fhirUser: Identity of the launching user as a FHIR resource.
+            launch/patient: Request a patient in context at launch.
+            patient/*.read: Read all resources for the patient in context.
+            user/*.read: Read all resources the user can access.
+            system/*.read: Backend services system-level read access.
+        clientCredentials:
+          tokenUrl: https://launch.smarthealthit.org/v/r4/auth/token
+          scopes:
+            system/*.read: Backend services system-level read access.
+externalDocs:
+  description: SMART on FHIR developer documentation
+  url: https://docs.smarthealthit.org
