@@ -1,0 +1,22 @@
+{
+  "provider": "smarthealthit",
+  "sources": [
+    "smarthealthit-bulk-data-api-openapi.yml",
+    "smarthealthit-clinical-records-api-openapi.yml",
+    "smarthealthit-conformance-api-openapi.yml",
+    "smarthealthit-patients-api-openapi.yml",
+    "smarthealthit-smart-app-launch-api-openapi.yml"
+  ],
+  "outputs": [
+    "smarthealthit-bulk-data-api-openapi.yml",
+    "smarthealthit-clinical-records-api-openapi.yml",
+    "smarthealthit-conformance-api-openapi.yml",
+    "smarthealthit-patients-api-openapi.yml",
+    "smarthealthit-smart-app-launch-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
