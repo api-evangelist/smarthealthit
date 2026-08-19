@@ -1,0 +1,605 @@
+{
+  "item": [
+    {
+      "id": "25f79a5b-8aef-4491-9413-c45717375c53",
+      "name": "Bulk Data",
+      "description": {
+        "content": "FHIR Bulk Data $export operations on the reference Bulk Data server.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3c4ab76d-367c-4b15-bf65-32e77f73ee11",
+          "name": "Start a system-level bulk export (Bulk Data server only)",
+          "request": {
+            "name": "Start a system-level bulk export (Bulk Data server only)",
+            "description": {
+              "content": "Kicks off an asynchronous export of all resources on the reference Bulk Data server (https://bulk-data.smarthealthit.org/fhir). Requires the Prefer respond-async header and a SMART Backend Services access token. Responds 202 with a Content-Location status URL to poll (honor Retry-After); when complete, the status endpoint returns a manifest of NDJSON file URLs to download.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "$export"
+              ],
+              "host": [
+                "{{$export-Url}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "_outputFormat",
+                  "value": "<string>",
+                  "description": "Requested bulk output format; defaults to application/fhir+ndjson."
+                },
+                {
+                  "disabled": false,
+                  "key": "_type",
+                  "value": "<string>",
+                  "description": "Comma-separated FHIR resource types to include in the export."
+                },
+                {
+                  "disabled": false,
+                  "key": "_since",
+                  "value": "<dateTime>",
+                  "description": "Only include resources modified after this instant."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fba973b8-1ceb-4812-988f-933cd61abd4b",
+              "name": "Export accepted; poll the Content-Location URL for status.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "$export"
+                  ],
+                  "host": [
+                    "{{$export-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "_outputFormat",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_since",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Absolute URL of the export status endpoint.",
+                  "key": "Content-Location",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "fc73f615-f9bd-4638-8ac7-6ce11c039f9b",
+              "name": "Missing or invalid access token (protected servers only).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "$export"
+                  ],
+                  "host": [
+                    "{{$export-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "_outputFormat",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_since",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/fhir+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/fhir+json"
+                }
+              ],
+              "body": "{\n  \"resourceType\": \"OperationOutcome\",\n  \"issue\": [\n    {\n      \"severity\": \"string\",\n      \"code\": \"string\",\n      \"diagnostics\": \"string\"\n    },\n    {\n      \"severity\": \"string\",\n      \"code\": \"string\",\n      \"diagnostics\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e85715f8-1e82-4c71-8a11-7dec2a702706",
+          "name": "Start a patient-level bulk export (Bulk Data server only)",
+          "request": {
+            "name": "Start a patient-level bulk export (Bulk Data server only)",
+            "description": {
+              "content": "Kicks off an asynchronous export of all data for all patients on the reference Bulk Data server, following the same async-request pattern as the system-level export.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "Patient",
+                "$export"
+              ],
+              "host": [
+                "{{Patient-$export-Url}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "_outputFormat",
+                  "value": "<string>",
+                  "description": "Requested bulk output format; defaults to application/fhir+ndjson."
+                },
+                {
+                  "disabled": false,
+                  "key": "_type",
+                  "value": "<string>",
+                  "description": "Comma-separated FHIR resource types to include in the export."
+                },
+                {
+                  "disabled": false,
+                  "key": "_since",
+                  "value": "<dateTime>",
+                  "description": "Only include resources modified after this instant."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "47f60cc3-8fce-4d11-be27-1629a056c78f",
+              "name": "Export accepted; poll the Content-Location URL for status.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Patient",
+                    "$export"
+                  ],
+                  "host": [
+                    "{{Patient-$export-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "_outputFormat",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_since",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Content-Location",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "cec047de-f76e-4d79-bf3b-0ab1e1d4459d",
+              "name": "Missing or invalid access token (protected servers only).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Patient",
+                    "$export"
+                  ],
+                  "host": [
+                    "{{Patient-$export-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "_outputFormat",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_since",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/fhir+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/fhir+json"
+                }
+              ],
+              "body": "{\n  \"resourceType\": \"OperationOutcome\",\n  \"issue\": [\n    {\n      \"severity\": \"string\",\n      \"code\": \"string\",\n      \"diagnostics\": \"string\"\n    },\n    {\n      \"severity\": \"string\",\n      \"code\": \"string\",\n      \"diagnostics\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "316316f8-ac88-42e8-9d98-aa4826ad9339",
+          "name": "Start a group-level bulk export (Bulk Data server only)",
+          "request": {
+            "name": "Start a group-level bulk export (Bulk Data server only)",
+            "description": {
+              "content": "Kicks off an asynchronous export of all data for the patients in a Group on the reference Bulk Data server.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "Group",
+                ":id",
+                "$export"
+              ],
+              "host": [
+                "{{Group-id-$export-Url}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "_outputFormat",
+                  "value": "<string>",
+                  "description": "Requested bulk output format; defaults to application/fhir+ndjson."
+                },
+                {
+                  "disabled": false,
+                  "key": "_type",
+                  "value": "<string>",
+                  "description": "Comma-separated FHIR resource types to include in the export."
+                },
+                {
+                  "disabled": false,
+                  "key": "_since",
+                  "value": "<dateTime>",
+                  "description": "Only include resources modified after this instant."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The logical id of the resource."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fbd2e64c-9cd6-46df-bc78-b2d7cee3e4ba",
+              "name": "Export accepted; poll the Content-Location URL for status.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Group",
+                    ":id",
+                    "$export"
+                  ],
+                  "host": [
+                    "{{Group-id-$export-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "_outputFormat",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_since",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The logical id of the resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Content-Location",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "4f3d06fa-c25b-43fb-b1f9-814743e96d04",
+              "name": "Missing or invalid access token (protected servers only).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "Group",
+                    ":id",
+                    "$export"
+                  ],
+                  "host": [
+                    "{{Group-id-$export-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "_outputFormat",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_since",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The logical id of the resource."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/fhir+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/fhir+json"
+                }
+              ],
+              "body": "{\n  \"resourceType\": \"OperationOutcome\",\n  \"issue\": [\n    {\n      \"severity\": \"string\",\n      \"code\": \"string\",\n      \"diagnostics\": \"string\"\n    },\n    {\n      \"severity\": \"string\",\n      \"code\": \"string\",\n      \"diagnostics\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://r4.smarthealthit.org",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "https://bulk-data.smarthealthit.org/fhir",
+      "key": "$export-Url"
+    },
+    {
+      "type": "string",
+      "value": "https://bulk-data.smarthealthit.org/fhir",
+      "key": "Patient-$export-Url"
+    },
+    {
+      "type": "string",
+      "value": "https://bulk-data.smarthealthit.org/fhir",
+      "key": "Group-id-$export-Url"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "openid fhirUser launch/patient patient/*.read user/*.read system/*.read"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://launch.smarthealthit.org/v/r4/auth/token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://launch.smarthealthit.org/v/r4/auth/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "2201c0de-7927-486d-95f1-99dde0e998fb",
+    "name": "SMART Health IT Sandbox FHIR APIs Bulk Data API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public, free sandbox APIs operated by SMART Health IT (Computational Health Informatics Program, Boston Children's Hospital / Harvard Medical School) for building and testing SMART on FHIR apps. Three surfaces are described here. (1) The open FHIR R4 sandbox at https://r4.smarthealthit.org - synthetic patient records served over plain FHIR REST with no authentication (DSTU2 and STU3 variants exist at r2/r3.smarthealthit.org). (2) The SMART App Launcher's protected FHIR R4 proxy at https://launch.smarthealthit.org/v/r4/fhir, which requires an OAuth 2.0 access token obtained through the HL7 SMART App Launch flow at /v/r4/auth/authorize and /v/r4/auth/token (no client registration needed). (3) The reference Bulk Data server at https://bulk-data.smarthealthit.org/fhir, which implements FHIR Bulk Data $export with SMART Backend Services JWT authentication. All data is synthetic; these servers are for development and testing, never real PHI.\n\nContact Support:\n Name: SMART Health IT",
+      "type": "text/plain"
+    }
+  }
+}

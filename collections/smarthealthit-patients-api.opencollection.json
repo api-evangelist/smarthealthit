@@ -1,0 +1,85 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SMART Health IT Sandbox FHIR APIs Bulk Data Patients API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://launch.smarthealthit.org/v/r4/auth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Patients",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search patients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Patient",
+            "params": [
+              {
+                "name": "_count",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of entries per page of the returned Bundle."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Match on patient name parts."
+              },
+              {
+                "name": "birthdate",
+                "value": "",
+                "type": "query",
+                "description": "Match on date of birth (supports FHIR date prefixes such as ge/le)."
+              },
+              {
+                "name": "gender",
+                "value": "",
+                "type": "query",
+                "description": "Administrative gender code."
+              }
+            ]
+          },
+          "docs": "Searches synthetic Patient resources. Supports standard FHIR search parameters such as name, birthdate, gender, and _count. Returns a searchset Bundle."
+        },
+        {
+          "info": {
+            "name": "Read a patient",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Patient/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The logical id of the resource."
+              }
+            ]
+          },
+          "docs": "Reads a single synthetic Patient resource by logical id."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,216 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SMART Health IT Sandbox FHIR APIs Bulk Data Clinical Records API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://launch.smarthealthit.org/v/r4/auth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Clinical Records",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search observations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Observation",
+            "params": [
+              {
+                "name": "patient",
+                "value": "",
+                "type": "query",
+                "description": "Scope the search to a patient, for example \"Patient/123\" or \"123\"."
+              },
+              {
+                "name": "_count",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of entries per page of the returned Bundle."
+              },
+              {
+                "name": "category",
+                "value": "",
+                "type": "query",
+                "description": "Observation category (for example vital-signs or laboratory)."
+              },
+              {
+                "name": "code",
+                "value": "",
+                "type": "query",
+                "description": "LOINC or other code identifying the observation."
+              }
+            ]
+          },
+          "docs": "Searches Observation resources - vital signs, lab results, and other measurements - typically scoped to a patient with the patient search parameter and filtered by category or code."
+        },
+        {
+          "info": {
+            "name": "Search conditions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Condition",
+            "params": [
+              {
+                "name": "patient",
+                "value": "",
+                "type": "query",
+                "description": "Scope the search to a patient, for example \"Patient/123\" or \"123\"."
+              },
+              {
+                "name": "_count",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of entries per page of the returned Bundle."
+              }
+            ]
+          },
+          "docs": "Searches Condition resources (problems and diagnoses) for a patient."
+        },
+        {
+          "info": {
+            "name": "Search medication requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/MedicationRequest",
+            "params": [
+              {
+                "name": "patient",
+                "value": "",
+                "type": "query",
+                "description": "Scope the search to a patient, for example \"Patient/123\" or \"123\"."
+              },
+              {
+                "name": "_count",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of entries per page of the returned Bundle."
+              }
+            ]
+          },
+          "docs": "Searches MedicationRequest resources (prescriptions and medication orders) for a patient."
+        },
+        {
+          "info": {
+            "name": "Search encounters",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Encounter",
+            "params": [
+              {
+                "name": "patient",
+                "value": "",
+                "type": "query",
+                "description": "Scope the search to a patient, for example \"Patient/123\" or \"123\"."
+              },
+              {
+                "name": "_count",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of entries per page of the returned Bundle."
+              }
+            ]
+          },
+          "docs": "Searches Encounter resources (visits and admissions) for a patient."
+        },
+        {
+          "info": {
+            "name": "Search allergies and intolerances",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/AllergyIntolerance",
+            "params": [
+              {
+                "name": "patient",
+                "value": "",
+                "type": "query",
+                "description": "Scope the search to a patient, for example \"Patient/123\" or \"123\"."
+              },
+              {
+                "name": "_count",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of entries per page of the returned Bundle."
+              }
+            ]
+          },
+          "docs": "Searches AllergyIntolerance resources for a patient."
+        },
+        {
+          "info": {
+            "name": "Search immunizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/Immunization",
+            "params": [
+              {
+                "name": "patient",
+                "value": "",
+                "type": "query",
+                "description": "Scope the search to a patient, for example \"Patient/123\" or \"123\"."
+              },
+              {
+                "name": "_count",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of entries per page of the returned Bundle."
+              }
+            ]
+          },
+          "docs": "Searches Immunization resources (vaccination history) for a patient."
+        },
+        {
+          "info": {
+            "name": "Search document references",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/DocumentReference",
+            "params": [
+              {
+                "name": "patient",
+                "value": "",
+                "type": "query",
+                "description": "Scope the search to a patient, for example \"Patient/123\" or \"123\"."
+              },
+              {
+                "name": "_count",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of entries per page of the returned Bundle."
+              }
+            ]
+          },
+          "docs": "Searches DocumentReference resources (clinical notes and documents) for a patient."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

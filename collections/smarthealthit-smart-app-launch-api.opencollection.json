@@ -1,0 +1,118 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SMART Health IT Sandbox FHIR APIs Bulk Data SMART App Launch API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://launch.smarthealthit.org/v/r4/auth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SMART App Launch",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "SMART App Launch authorization endpoint (launcher only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://r4.smarthealthit.org/auth/authorize",
+            "params": [
+              {
+                "name": "response_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "redirect_uri",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "scope",
+                "value": "",
+                "type": "query",
+                "description": "Space-separated SMART scopes, for example \"launch/patient patient/*.read openid fhirUser\"."
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "aud",
+                "value": "",
+                "type": "query",
+                "description": "The FHIR base URL the token will be used against."
+              }
+            ]
+          },
+          "docs": "OAuth 2.0 authorization endpoint on the SMART App Launcher, located at https://launch.smarthealthit.org/v/r4/auth/authorize (a sibling of the /fhir base, so this path carries its own server). Initiates the SMART App Launch authorization code flow with PKCE, accepting standard OAuth parameters plus SMART launch context (launch, aud/aud-validated FHIR base, and clinical scopes such as patient/*.read, launch/patient, openid, and fhirUser). No client registration is required on the sandbox."
+        },
+        {
+          "info": {
+            "name": "SMART App Launch token endpoint (launcher only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://r4.smarthealthit.org/auth/token",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "grant_type",
+                  "value": ""
+                },
+                {
+                  "name": "code",
+                  "value": ""
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": ""
+                },
+                {
+                  "name": "code_verifier",
+                  "value": ""
+                },
+                {
+                  "name": "client_assertion_type",
+                  "value": ""
+                },
+                {
+                  "name": "client_assertion",
+                  "value": ""
+                },
+                {
+                  "name": "scope",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "OAuth 2.0 token endpoint on the SMART App Launcher, located at https://launch.smarthealthit.org/v/r4/auth/token. Exchanges an authorization code (with PKCE verifier) for an access token carrying SMART launch context (patient, encounter, fhirUser), or accepts a SMART Backend Services client_credentials grant with a signed JWT client assertion."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,131 @@
+{
+  "item": [
+    {
+      "id": "92b70cde-caad-4359-8fdf-077556cf84b5",
+      "name": "Conformance",
+      "description": {
+        "content": "Server capability discovery.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "23ff3605-7a51-4369-9949-c2c712cf89bf",
+          "name": "Retrieve the FHIR CapabilityStatement",
+          "request": {
+            "name": "Retrieve the FHIR CapabilityStatement",
+            "description": {
+              "content": "Returns the server's FHIR R4 CapabilityStatement. On the launcher proxy the security section advertises the OAuth2 SMART-on-FHIR service with authorize, token, and introspect extension URIs.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "metadata"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d8832956-8448-4d08-bcd9-332cdd6ce9ff",
+              "name": "The server CapabilityStatement.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "metadata"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/fhir+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/fhir+json"
+                }
+              ],
+              "body": "{\n  \"resourceType\": \"string\",\n  \"id\": \"string\",\n  \"key_0\": false,\n  \"key_1\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://r4.smarthealthit.org",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "openid fhirUser launch/patient patient/*.read user/*.read system/*.read"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://launch.smarthealthit.org/v/r4/auth/token"
+      },
+      {
+        "key": "authUrl",
+        "value": "https://launch.smarthealthit.org/v/r4/auth/authorize"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "7574b60e-df3c-4bd6-b8b4-4b2d3227fc5d",
+    "name": "SMART Health IT Sandbox FHIR APIs Bulk Data Conformance API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public, free sandbox APIs operated by SMART Health IT (Computational Health Informatics Program, Boston Children's Hospital / Harvard Medical School) for building and testing SMART on FHIR apps. Three surfaces are described here. (1) The open FHIR R4 sandbox at https://r4.smarthealthit.org - synthetic patient records served over plain FHIR REST with no authentication (DSTU2 and STU3 variants exist at r2/r3.smarthealthit.org). (2) The SMART App Launcher's protected FHIR R4 proxy at https://launch.smarthealthit.org/v/r4/fhir, which requires an OAuth 2.0 access token obtained through the HL7 SMART App Launch flow at /v/r4/auth/authorize and /v/r4/auth/token (no client registration needed). (3) The reference Bulk Data server at https://bulk-data.smarthealthit.org/fhir, which implements FHIR Bulk Data $export with SMART Backend Services JWT authentication. All data is synthetic; these servers are for development and testing, never real PHI.\n\nContact Support:\n Name: SMART Health IT",
+      "type": "text/plain"
+    }
+  }
+}
