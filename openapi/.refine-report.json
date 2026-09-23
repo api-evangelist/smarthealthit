@@ -1,11 +1,7 @@
 {
   "provider": "smarthealthit",
   "sources": [
-    "smarthealthit-bulk-data-api-openapi.yml",
-    "smarthealthit-clinical-records-api-openapi.yml",
-    "smarthealthit-conformance-api-openapi.yml",
-    "smarthealthit-patients-api-openapi.yml",
-    "smarthealthit-smart-app-launch-api-openapi.yml"
+    "_original/smarthealthit-openapi.yml"
   ],
   "outputs": [
     "smarthealthit-bulk-data-api-openapi.yml",
@@ -17,6 +13,16 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "smarthealthit-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "smarthealthit-bulk-data-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smarthealthit-clinical-records-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smarthealthit-conformance-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smarthealthit-patients-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "smarthealthit-smart-app-launch-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

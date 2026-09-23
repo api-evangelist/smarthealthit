@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: SMART Health IT Sandbox FHIR APIs Bulk Data SMART App Launch API
-  description: Public, free sandbox APIs operated by SMART Health IT (Computational Health Informatics Program, Boston Children's Hospital / Harvard Medical School) for building and testing SMART on FHIR apps. Three surfaces are described here. (1) The open FHIR R4 sandbox at https://r4.smarthealthit.org - synthetic patient records served over plain FHIR REST with no authentication (DSTU2 and STU3 variants exist at r2/r3.smarthealthit.org). (2) The SMART App Launcher's protected FHIR R4 proxy at https://launch.smarthealthit.org/v/r4/fhir, which requires an OAuth 2.0 access token obtained through the HL7 SMART App Launch flow at /v/r4/auth/authorize and /v/r4/auth/token (no client registration needed). (3) The reference Bulk Data server at https://bulk-data.smarthealthit.org/fhir, which implements FHIR Bulk Data $export with SMART Backend Services JWT authentication. All data is synthetic; these servers are for development and testing, never real PHI.
+  title: SMART Health IT Sandbox FHIR SMART App Launch API
+  description: Public, free sandbox APIs operated by SMART Health IT (Computational Health Informatics Program, Boston Children's Hospital / Harvard Medical School) for building and testing SMART on FHIR apps.
   version: '1.0'
   contact:
     name: SMART Health IT
