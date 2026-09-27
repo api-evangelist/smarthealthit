@@ -153,7 +153,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bundle'
 components:
+  parameters:
+    Count:
+      name: _count
+      in: query
+      description: Maximum number of entries per page of the returned Bundle.
+      schema:
+        type: integer
+    Patient:
+      name: patient
+      in: query
+      description: Scope the search to a patient, for example "Patient/123" or "123".
+      schema:
+        type: string
   schemas:
+    FhirResource:
+      type: object
+      description: Any FHIR R4 resource, identified by its resourceType element.
+      properties:
+        resourceType:
+          type: string
+        id:
+          type: string
+      additionalProperties: true
     Bundle:
       type: object
       description: A FHIR R4 searchset Bundle.
@@ -184,28 +206,6 @@ components:
                 type: string
               resource:
                 $ref: '#/components/schemas/FhirResource'
-    FhirResource:
-      type: object
-      description: Any FHIR R4 resource, identified by its resourceType element.
-      properties:
-        resourceType:
-          type: string
-        id:
-          type: string
-      additionalProperties: true
-  parameters:
-    Patient:
-      name: patient
-      in: query
-      description: Scope the search to a patient, for example "Patient/123" or "123".
-      schema:
-        type: string
-    Count:
-      name: _count
-      in: query
-      description: Maximum number of entries per page of the returned Bundle.
-      schema:
-        type: integer
   securitySchemes:
     smartOnFhir:
       type: oauth2
