@@ -87,6 +87,13 @@ components:
       description: Maximum number of entries per page of the returned Bundle.
       schema:
         type: integer
+  responses:
+    NotFound:
+      description: No resource exists with the given id.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
   schemas:
     OperationOutcome:
       type: object
@@ -146,13 +153,6 @@ components:
         id:
           type: string
       additionalProperties: true
-  responses:
-    NotFound:
-      description: No resource exists with the given id.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
   securitySchemes:
     smartOnFhir:
       type: oauth2

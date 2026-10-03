@@ -96,12 +96,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   parameters:
-    OutputFormat:
-      name: _outputFormat
-      in: query
-      description: Requested bulk output format; defaults to application/fhir+ndjson.
-      schema:
-        type: string
     ResourceId:
       name: id
       in: path
@@ -116,12 +110,25 @@ components:
       schema:
         type: string
         format: date-time
+    OutputFormat:
+      name: _outputFormat
+      in: query
+      description: Requested bulk output format; defaults to application/fhir+ndjson.
+      schema:
+        type: string
     Type:
       name: _type
       in: query
       description: Comma-separated FHIR resource types to include in the export.
       schema:
         type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token (protected servers only).
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
   schemas:
     OperationOutcome:
       type: object
@@ -142,13 +149,6 @@ components:
                 type: string
               diagnostics:
                 type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid access token (protected servers only).
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
   securitySchemes:
     smartOnFhir:
       type: oauth2
