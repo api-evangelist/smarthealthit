@@ -153,19 +153,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bundle'
 components:
-  parameters:
-    Count:
-      name: _count
-      in: query
-      description: Maximum number of entries per page of the returned Bundle.
-      schema:
-        type: integer
-    Patient:
-      name: patient
-      in: query
-      description: Scope the search to a patient, for example "Patient/123" or "123".
-      schema:
-        type: string
   schemas:
     FhirResource:
       type: object
@@ -206,6 +193,19 @@ components:
                 type: string
               resource:
                 $ref: '#/components/schemas/FhirResource'
+  parameters:
+    Patient:
+      name: patient
+      in: query
+      description: Scope the search to a patient, for example "Patient/123" or "123".
+      schema:
+        type: string
+    Count:
+      name: _count
+      in: query
+      description: Maximum number of entries per page of the returned Bundle.
+      schema:
+        type: integer
   securitySchemes:
     smartOnFhir:
       type: oauth2

@@ -73,47 +73,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The logical id of the resource.
-      schema:
-        type: string
-    Count:
-      name: _count
-      in: query
-      description: Maximum number of entries per page of the returned Bundle.
-      schema:
-        type: integer
-  responses:
-    NotFound:
-      description: No resource exists with the given id.
-      content:
-        application/fhir+json:
-          schema:
-            $ref: '#/components/schemas/OperationOutcome'
   schemas:
-    OperationOutcome:
-      type: object
-      description: A FHIR OperationOutcome describing an error.
-      properties:
-        resourceType:
-          type: string
-          enum:
-          - OperationOutcome
-        issue:
-          type: array
-          items:
-            type: object
-            properties:
-              severity:
-                type: string
-              code:
-                type: string
-              diagnostics:
-                type: string
     Bundle:
       type: object
       description: A FHIR R4 searchset Bundle.
@@ -144,6 +104,25 @@ components:
                 type: string
               resource:
                 $ref: '#/components/schemas/FhirResource'
+    OperationOutcome:
+      type: object
+      description: A FHIR OperationOutcome describing an error.
+      properties:
+        resourceType:
+          type: string
+          enum:
+          - OperationOutcome
+        issue:
+          type: array
+          items:
+            type: object
+            properties:
+              severity:
+                type: string
+              code:
+                type: string
+              diagnostics:
+                type: string
     FhirResource:
       type: object
       description: Any FHIR R4 resource, identified by its resourceType element.
@@ -153,6 +132,27 @@ components:
         id:
           type: string
       additionalProperties: true
+  parameters:
+    Count:
+      name: _count
+      in: query
+      description: Maximum number of entries per page of the returned Bundle.
+      schema:
+        type: integer
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The logical id of the resource.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: No resource exists with the given id.
+      content:
+        application/fhir+json:
+          schema:
+            $ref: '#/components/schemas/OperationOutcome'
   securitySchemes:
     smartOnFhir:
       type: oauth2
