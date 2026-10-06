@@ -60,7 +60,7 @@ tags_raw:
 - Open Standards
 - Interoperability
 created: '2026-07-11'
-modified: '2026-07-11'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
 - aid: smarthealthit:smarthealthit-health-cards-framework
@@ -183,6 +183,10 @@ apis:
   - type: APIReference
     url: https://bulk-data.smarthealthit.org/
 common:
+- url: https://smarthealthit.org/category/news/
+  type: Blog
+- url: https://smarthealthit.org/feed/
+  type: BlogRSS
 - type: AgenticAccess
   url: agentic-access/smarthealthit-agentic-access.yml
 - type: VulnerabilityDisclosure
